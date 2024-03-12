@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>{text}</button>
@@ -16,16 +16,29 @@ const App = () => {
     "The only way to go fast is to go well.",
   ];
 
+  const initialVotes = new Array(anecdotes.length).fill(0);
+  const [votes, setVotes] = useState([...initialVotes]);
   const [selected, setSelected] = useState(0);
 
   const setToSelected = () => {
-    setSelected(selected + 1);
+    setSelected((selected + 1) % anecdotes.length);
+  };
+
+  const handleVote = () => {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+    console.log(newVotes);
   };
 
   return (
     <>
-      <div>{anecdotes[selected]}</div>
-      <Button handleClick={setToSelected} text="next anecdote" />
+      <div>
+        <div>{anecdotes[selected]}</div>
+        <div>Has {votes[selected]} points</div>
+      </div>
+      <Button handleClick={handleVote} text="Vote" />
+      <Button handleClick={setToSelected} text="Next Anecdote" />
     </>
   );
 };
